@@ -1,0 +1,67 @@
+version: '3.7'
+
+services:
+  mysql57:
+    image: mysql:5.7
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL57_ROOT_PASSWORD}
+      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - GOSU_VERSION=1.12
+      - MYSQL_MAJOR=5.7
+      - MYSQL_VERSION=5.7.31-1debian10
+    volumes:
+      - /Users/ben/DockerRun/mysql57/mysqld:/var/lib/mysql
+    ports:
+      - "53306:3306"
+    networks:
+      - code-network
+
+  mysql80:
+    image: mysql/mysql-server:8.0
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL80_ROOT_PASSWORD}
+      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+    volumes:
+      - /Users/ben/DockerRun/mysql80:/var/lib/mysql
+    ports:
+      - "53308:3306"
+    networks:
+      - code-network
+
+  redis:
+    image: redis
+    restart: always
+    environment:
+      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - GOSU_VERSION=1.12
+      - REDIS_VERSION=6.2.1
+      - REDIS_DOWNLOAD_URL=http://download.redis.io/releases/redis-6.2.1.tar.gz
+      - REDIS_DOWNLOAD_SHA=cd222505012cce20b25682fca931ec93bd21ae92cb4abfe742cf7b76aa907520
+    ports:
+      - "56379:6379"
+    networks:
+      - code-network
+
+  prostgres:
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/12/bin
+      - GOSU_VERSION=1.12
+      - LANG=en_US.utf8
+      - PG_MAJOR=12
+      - PG_VERSION=12.3-1.pgdg100+1
+      - PGDATA=/var/lib/postgresql/data
+    image: postgres:12.3
+    restart: always
+    volumes:
+      - /Users/ben/DockerRun/postgres-data:/var/lib/postgresql
+    ports:
+      - "55432:5432"
+    networks:
+      - code-network
+
+networks:
+  code-network:
+    driver: bridge
